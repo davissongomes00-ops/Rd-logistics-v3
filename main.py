@@ -44,7 +44,27 @@ def read_root():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Vercel + FastAPI</title>
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
-        <style>
+        <style><style>
+        /* Escrita Vermelha RD */
+        h1, .rd-title { color: #FF0000 !important; font-weight: bold; }
+
+        /* Carrinha RD em Movimento */
+        .truck-animation {
+            position: fixed; bottom: 15px; left: -100px;
+            font-size: 35px; color: #FF0000;
+            animation: delivery 12s infinite linear;
+            z-index: 9999;
+        }
+        @keyframes delivery { from { left: -100px; } to { left: 105vw; } }
+
+        /* Carrinho de Compras */
+        .rd-cart {
+            position: fixed; top: 25px; right: 25px;
+            background: #000; color: #fff; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; z-index: 10000;
+        }
+    </style>
             * {
                 margin: 0;
                 padding: 0;
