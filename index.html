@@ -1,364 +1,190 @@
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RD Logistics | Command Center Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Urbanist:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --rd-red: #FF0000; --nexus-blue: #00d2ff; --dark-bg: #000000; }
+        
+        body { margin: 0; background: var(--dark-bg); color: white; font-family: 'Urbanist', sans-serif; overflow-x: hidden; }
 
-
-app = FastAPI(
-    title="Vercel + FastAPI",
-    description="Vercel + FastAPI",
-    version="1.0.0",
-)
-
-
-@app.get("/api/data")
-def get_sample_data():
-    return {
-        "data": [
-            {"id": 1, "name": "Sample Item 1", "value": 100},
-            {"id": 2, "name": "Sample Item 2", "value": 200},
-            {"id": 3, "name": "Sample Item 3", "value": 300}
-        ],
-        "total": 3,
-        "timestamp": "2024-01-01T00:00:00Z"
-    }
-
-
-@app.get("/api/items/{item_id}")
-def get_item(item_id: int):
-    return {
-        "item": {
-            "id": item_id,
-            "name": "Sample Item " + str(item_id),
-            "value": item_id * 100
-        },
-        "timestamp": "2024-01-01T00:00:00Z"
-    }
-
-
-@app.get("/", response_class=HTMLResponse)
-def read_root():
-    return """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Vercel + FastAPI</title>
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
-        <style><style>
-        /* Escrita Vermelha RD */
-        h1, .rd-title { color: #FF0000 !important; font-weight: bold; }
-
-        /* Carrinha RD em Movimento */
-        .truck-animation {
-            position: fixed; bottom: 15px; left: -100px;
-            font-size: 35px; color: #FF0000;
-            animation: delivery 12s infinite linear;
-            z-index: 9999;
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--rd-red);
+            background: #0a0a0a;
         }
-        @keyframes delivery { from { left: -100px; } to { left: 105vw; } }
 
-        /* Carrinho de Compras */
-        .rd-cart {
-            position: fixed; top: 25px; right: 25px;
-            background: #000; color: #fff; width: 60px; height: 60px;
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; z-index: 10000;
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--rd-red); font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+
+        .container { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 30px; padding: 40px; max-width: 1400px; margin: auto; }
+
+        .software-card {
+            background: #0a0a0a;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #222;
+            border-left: 6px solid var(--rd-red);
         }
+
+        h2 { font-family: 'Orbitron', sans-serif; margin-top: 0; }
+
+        input { width: 90%; padding: 15px; margin: 15px 0; background: #111; border: 1px solid #333; color: white; border-radius: 8px; font-size: 1.1rem; }
+        input:focus { border-color: var(--rd-red); outline: none; }
+
+        .btn-rd {
+            width: 100%; background: var(--rd-red); color: white; border: none; padding: 16px;
+            font-family: 'Orbitron'; font-weight: bold; font-size: 1rem; border-radius: 8px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-rd:hover { background: #cc0000; transform: translateY(-2px); }
+
+        .budget-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .budget-table th { text-align: left; padding: 12px; color: #888; font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid #222; }
+        .budget-table td { padding: 14px 12px; border-bottom: 1px solid #111; font-size: 0.95rem; }
+        .total-row { font-size: 1.2rem; font-weight: bold; color: var(--rd-red); font-family: 'Orbitron'; }
+
+        .neuralink-panel {
+            background: #0a0a0a; border: 1px solid #222; border-radius: 15px; padding: 25px;
+            display: flex; flex-direction: column; justify-content: space-between; height: 350px;
+        }
+        .chat-header { color: var(--nexus-blue); font-family: 'Orbitron'; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .chat-body { color: #aaa; font-size: 0.9rem; line-height: 1.6; overflow-y: auto; padding: 10px 0; }
+        
+        .truck-lane { width: 100%; background: #050505; padding: 10px 0; border-top: 1px solid #111; position: fixed; bottom: 0; left: 0; }
+        .truck-rd { position: absolute; bottom: 5px; left: -50px; color: var(--rd-red); font-size: 28px; animation: drive 14s infinite linear; }
+        @keyframes drive { from { left: -50px; } to { left: 105%; } }
     </style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            
-            body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-                background-color: #000000;
-                color: #ffffff;
-                line-height: 1.6;
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            header {
-                border-bottom: 1px solid #333333;
-                padding: 0;
-            }
-            
-            nav {
-                max-width: 1200px;
-                margin: 0 auto;
-                display: flex;
-                align-items: center;
-                padding: 1rem 2rem;
-                gap: 2rem;
-            }
-            
-            .logo {
-                font-size: 1.25rem;
-                font-weight: 600;
-                color: #ffffff;
-                text-decoration: none;
-            }
-            
-            .nav-links {
-                display: flex;
-                gap: 1.5rem;
-                margin-left: auto;
-            }
-            
-            .nav-links a {
-                text-decoration: none;
-                color: #888888;
-                padding: 0.5rem 1rem;
-                border-radius: 6px;
-                transition: all 0.2s ease;
-                font-size: 0.875rem;
-                font-weight: 500;
-            }
-            
-            .nav-links a:hover {
-                color: #ffffff;
-                background-color: #111111;
-            }
-            
-            main {
-                flex: 1;
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 4rem 2rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            
-            .hero {
-                margin-bottom: 3rem;
-            }
-            
-            .hero-code {
-                margin-top: 2rem;
-                width: 100%;
-                max-width: 900px;
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            }
-            
-            .hero-code pre {
-                background-color: #0a0a0a;
-                border: 1px solid #333333;
-                border-radius: 8px;
-                padding: 1.5rem;
-                text-align: left;
-                grid-column: 1 / -1;
-            }
-            
-            h1 {
-                font-size: 3rem;
-                font-weight: 700;
-                margin-bottom: 1rem;
-                background: linear-gradient(to right, #ffffff, #888888);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            }
-            
-            .subtitle {
-                font-size: 1.25rem;
-                color: #888888;
-                margin-bottom: 2rem;
-                max-width: 600px;
-            }
-            
-            .cards {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 1.5rem;
-                width: 100%;
-                max-width: 900px;
-            }
-            
-            .card {
-                background-color: #111111;
-                border: 1px solid #333333;
-                border-radius: 8px;
-                padding: 1.5rem;
-                transition: all 0.2s ease;
-                text-align: left;
-            }
-            
-            .card:hover {
-                border-color: #555555;
-                transform: translateY(-2px);
-            }
-            
-            .card h3 {
-                font-size: 1.125rem;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-                color: #ffffff;
-            }
-            
-            .card p {
-                color: #888888;
-                font-size: 0.875rem;
-                margin-bottom: 1rem;
-            }
-            
-            .card a {
-                display: inline-flex;
-                align-items: center;
-                color: #ffffff;
-                text-decoration: none;
-                font-size: 0.875rem;
-                font-weight: 500;
-                padding: 0.5rem 1rem;
-                background-color: #222222;
-                border-radius: 6px;
-                border: 1px solid #333333;
-                transition: all 0.2s ease;
-            }
-            
-            .card a:hover {
-                background-color: #333333;
-                border-color: #555555;
-            }
-            
-            .status-badge {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.5rem;
-                background-color: #0070f3;
-                color: #ffffff;
-                padding: 0.25rem 0.75rem;
-                border-radius: 20px;
-                font-size: 0.75rem;
-                font-weight: 500;
-                margin-bottom: 2rem;
-            }
-            
-            .status-dot {
-                width: 6px;
-                height: 6px;
-                background-color: #00ff88;
-                border-radius: 50%;
-            }
-            
-            pre {
-                background-color: #0a0a0a;
-                border: 1px solid #333333;
-                border-radius: 6px;
-                padding: 1rem;
-                overflow-x: auto;
-                margin: 0;
-            }
-            
-            code {
-                font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-                font-size: 0.85rem;
-                line-height: 1.5;
-                color: #ffffff;
-            }
-            
-            /* Syntax highlighting */
-            .keyword {
-                color: #ff79c6;
-            }
-            
-            .string {
-                color: #f1fa8c;
-            }
-            
-            .function {
-                color: #50fa7b;
-            }
-            
-            .class {
-                color: #8be9fd;
-            }
-            
-            .module {
-                color: #8be9fd;
-            }
-            
-            .variable {
-                color: #f8f8f2;
-            }
-            
-            .decorator {
-                color: #ffb86c;
-            }
-            
-            @media (max-width: 768px) {
-                nav {
-                    padding: 1rem;
-                    flex-direction: column;
-                    gap: 1rem;
-                }
-                
-                .nav-links {
-                    margin-left: 0;
-                }
-                
-                main {
-                    padding: 2rem 1rem;
-                }
-                
-                h1 {
-                    font-size: 2rem;
-                }
-                
-                .hero-code {
-                    grid-template-columns: 1fr;
-                }
-                
-                .cards {
-                    grid-template-columns: 1fr;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <nav>
-                <a href="/" class="logo">Vercel + FastAPI</a>
-                <div class="nav-links">
-                    <a href="/docs">API Docs</a>
-                    <a href="/api/data">API</a>
-                </div>
-            </nav>
-        </header>
-        <main>
-            <div class="hero">
-                <h1>Vercel + FastAPI</h1>
-                <div class="hero-code">
-                    <pre><code><span class="keyword">from</span> <span class="module">fastapi</span> <span class="keyword">import</span> <span class="class">FastAPI</span>
+</head>
+<body>
 
-<span class="variable">app</span> = <span class="class">FastAPI</span>()
+<header>
+    <div class="logo">RD. REFERÊNCIA DETERMINANTE.</div>
+    <div style="color: var(--nexus-blue); font-family: 'Orbitron'; font-size: 0.85rem;"><i class="fa-solid fa-microchip"></i> NEXUS INTELLIGENCE ACTIVE</div>
+</header>
 
-<span class="decorator">@app.get</span>(<span class="string">"/"</span>)
-<span class="keyword">def</span> <span class="function">read_root</span>():
-    <span class="keyword">return</span> {<span class="string">"Python"</span>: <span class="string">"on Vercel"</span>}</code></pre>
-                </div>
-            </div>
+<div class="container">
+    <div class="software-card">
+        <h2><i class="fa-solid fa-calculator" style="color: var(--rd-red);"></i> Calculadora de Engenharia & Custos V3.1</h2>
+        <p style="color: #666; margin-bottom: 25px;">Introduza a área total da obra (m²) para obter a listagem exata de materiais e o orçamento comercial automático.</p>
+        
+        <label style="font-weight: bold; font-size: 0.9rem; color: #aaa;">ÁREA DA OBRA (M²)</label>
+        <input type="number" id="areaInput" placeholder="Exemplo: 150">
+        
+        <button class="btn-rd" onclick="calcularOrcamento()">GERAR ORÇAMENTO DETALHADO</button>
+
+        <div id="resultadoBloco" style="display: none; margin-top: 30px;">
+            <table class="budget-table">
+                <thead>
+                    <tr>
+                        <th>Material Requisitado</th>
+                        <th>Qtd. Calculada</th>
+                        <th>Preço Total (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Placas de Pladur (1.20x2.40m)</td><td id="qtd-placas">0</td><td id="val-placas">0.00€</td></tr>
+                    <tr><td>Perfim Montante</td><td id="qtd-perfis">0</td><td id="val-perfis">0.00€</td></tr>
+                    <tr><td>Parafusos TN25</td><td id="qtd-parafusos">0</td><td id="val-parafusos">0.00€</td></tr>
+                    <tr><td>Massa de Juntas (Secagem Rápida)</td><td id="qtd-massa">0</td><td id="val-massa">0.00€</td></tr>
+                    <tr><td>Manta de Isolamento (Lã de Rocha)</td><td id="qtd-manta">0</td><td id="val-manta">0.00€</td></tr>
+                    <tr style="background: #0f0f0f;">
+                        <td class="total-row" style="padding: 20px 12px;">TOTAL DO INVESTIMENTO</td>
+                        <td></td>
+                        <td class="total-row" id="total-geral" style="padding: 20px 12px; text-align: right;">0.00€</td>
+                    </tr>
+                </tbody>
+            </table>
             
-            <div class="cards">
-                <div class="card">
-                    <h3>Interactive API Docs</h3>
-                    <p>Explore this API's endpoints with the interactive Swagger UI. Test requests and view response schemas in real-time.</p>
-                    <a href="/docs">Open Swagger UI →</a>
-                </div>
-                
-                <div class="card">
-                    <h3>Sample Data</h3>
-                    <p>Access sample JSON data through our REST API. Perfect for testing and development purposes.</p>
-                    <a href="/api/data">Get Data →</a>
-                </div>
-                
+            <button class="btn-rd" id="whatsappBtn" style="background: #25D366; margin-top: 20px;">
+                <i class="fa-brands fa-whatsapp"></i> ENVIAR ENCOMENDA PARA O WHATSAPP
+            </button>
+        </div>
+    </div>
+
+    <div class="neuralink-panel">
+        <div>
+            <div class="chat-header"><i class="fa-solid fa-circle-nodes"></i> CHAT NEURALINK VIRTUAL</div>
+            <hr style="border-color: #222; margin: 15px 0;">
+            <div class="chat-body" id="chatLogs">
+                <p style="color: var(--nexus-blue); margin-top: 0;"><strong>[NEXUS AI]:</strong> Pronto para simulação. Digite a área ao lado para ver o software operar em tempo real e calcular as margens estáveis.</p>
             </div>
-        </main>
-    </body>
-    </html>
-    """
+        </div>
+        <div style="font-size: 0.75rem; color: #444; font-family: 'Orbitron'; text-align: right;">STATUS: MONITORING FLEET</div>
+    </div>
+</div>
+
+<div class="truck-lane">
+    <div class="truck-rd"><i class="fa-solid fa-truck-fast"></i></div>
+</div>
+
+<script>
+    function calcularOrcamento() {
+        const area = parseFloat(document.getElementById('areaInput').value);
+        if(!area || area <= 0) return alert("Por favor, Comandante, insira uma área válida!");
+
+        const P_PLACA = 12.50;
+        const P_PERFIL = 3.80;
+        const P_PARAFUSO = 0.05;
+        const P_MASSA = 1.20;
+        const P_MANTA = 4.50;
+
+        const qtdPlacas = Math.ceil(area / 2.88);
+        const qtdPerfis = Math.ceil(area * 2.1);
+        const qtdParafusos = Math.ceil(area * 18);
+        const qtdMassa = (area * 0.5).toFixed(1);
+        const qtdManta = Math.ceil(area * 1.05);
+
+        const tPlacas = qtdPlacas * P_PLACA;
+        const tPerfis = qtdPerfis * P_PERFIL;
+        const tParafusos = qtdParafusos * P_PARAFUSO;
+        const tMassa = qtdMassa * P_MASSA;
+        const tManta = qtdManta * P_MANTA;
+        const totalGeral = (tPlacas + tPerfis + tParafusos + tMassa + tManta).toFixed(2);
+
+        document.getElementById('qtd-placas').innerText = qtdPlacas + " un";
+        document.getElementById('val-placas').innerText = tPlacas.toFixed(2) + "€";
+        
+        document.getElementById('qtd-perfis').innerText = qtdPerfis + " m";
+        document.getElementById('val-perfis').innerText = tPerfis.toFixed(2) + "€";
+        
+        document.getElementById('qtd-parafusos').innerText = qtdParafusos + " un";
+        document.getElementById('val-parafusos').innerText = tParafusos.toFixed(2) + "€";
+        
+        document.getElementById('qtd-massa').innerText = qtdMassa + " kg";
+        document.getElementById('val-massa').innerText = tMassa.toFixed(2) + "€";
+        
+        document.getElementById('qtd-manta').innerText = qtdManta + " m²";
+        document.getElementById('val-manta').innerText = tManta.toFixed(2) + "€";
+
+        document.getElementById('total-geral').innerText = totalGeral + "€";
+
+        const numeroWhatsApp = "351910000000"; 
+        const textoMsg = encodeURIComponent(
+            `*NOVA ENCOMENDA RD LOGISTICS*\n` +
+            `Área Calculada: ${area}m²\n\n` +
+            `- Placas: ${qtdPlacas} un (Preço com margem)\n` +
+            `- Perfis: ${qtdPerfis}m\n` +
+            `- Parafusos TN25: ${qtdParafusos} un\n` +
+            `- Massa de Juntas: ${qtdMassa}kg\n` +
+            `- Manta Lã de Rocha: ${qtdManta}m²\n\n` +
+            `*VALOR TOTAL ORÇAMENTADO: ${totalGeral}€*`
+        );
+        document.getElementById('whatsappBtn').onclick = function() {
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${textoMsg}`, '_blank');
+        };
+
+        const chat = document.getElementById('chatLogs');
+        chat.innerHTML += `<p style='color:#fff;'><strong>[USER]:</strong> Solicitado cálculo para ${area}m².</p>`;
+        chat.innerHTML += `<p style='color:var(--nexus-blue);'><strong>[NEXUS AI]:</strong> Orçamento estruturado com sucesso. Todos os 5 materiais reconciliados. Margem comercial travada no sistema.</p>`;
+        chat.scrollTop = chat.scrollHeight;
+
+        document.getElementById('resultadoBloco').style.display = 'block';
+    }
+</script>
+</body>
+</html>
