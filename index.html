@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-pt" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RD Logistics | Command Center Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -21,7 +22,6 @@
         }
 
         .logo { font-family: 'Orbitron', sans-serif; color: var(--rd-red); font-size: 22px; font-weight: bold; letter-spacing: 1px; }
-
         .container { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 30px; padding: 40px; max-width: 1400px; margin: auto; }
 
         .software-card {
@@ -33,7 +33,6 @@
         }
 
         h2 { font-family: 'Orbitron', sans-serif; margin-top: 0; }
-
         input { width: 90%; padding: 15px; margin: 15px 0; background: #111; border: 1px solid #333; color: white; border-radius: 8px; font-size: 1.1rem; }
         input:focus { border-color: var(--rd-red); outline: none; }
 
@@ -88,7 +87,7 @@
                 </thead>
                 <tbody>
                     <tr><td>Placas de Pladur (1.20x2.40m)</td><td id="qtd-placas">0</td><td id="val-placas">0.00€</td></tr>
-                    <tr><td>Perfim Montante</td><td id="qtd-perfis">0</td><td id="val-perfis">0.00€</td></tr>
+                    <tr><td>Perfis Montante</td><td id="qtd-perfis">0</td><td id="val-perfis">0.00€</td></tr>
                     <tr><td>Parafusos TN25</td><td id="qtd-parafusos">0</td><td id="val-parafusos">0.00€</td></tr>
                     <tr><td>Massa de Juntas (Secagem Rápida)</td><td id="qtd-massa">0</td><td id="val-massa">0.00€</td></tr>
                     <tr><td>Manta de Isolamento (Lã de Rocha)</td><td id="qtd-manta">0</td><td id="val-manta">0.00€</td></tr>
@@ -111,7 +110,7 @@
             <div class="chat-header"><i class="fa-solid fa-circle-nodes"></i> CHAT NEURALINK VIRTUAL</div>
             <hr style="border-color: #222; margin: 15px 0;">
             <div class="chat-body" id="chatLogs">
-                <p style="color: var(--nexus-blue); margin-top: 0;"><strong>[NEXUS AI]:</strong> Pronto para simulação. Digite a área ao lado para ver o software operar em tempo real e calcular as margens estáveis.</p>
+                <p style="color: var(--nexus-blue); margin-top: 0;"><strong>[NEXUS AI]:</strong> Pronto para simulação. Digite a área ao lado para ver o software operar em tempo real.</p>
             </div>
         </div>
         <div style="font-size: 0.75rem; color: #444; font-family: 'Orbitron'; text-align: right;">STATUS: MONITORING FLEET</div>
@@ -163,28 +162,31 @@
 
         document.getElementById('total-geral').innerText = totalGeral + "€";
 
+        // ---- INSIRA O SEU NÚMERO REAL ABAIXO ENTRE AS ASPAS ----
         const numeroWhatsApp = "351912681442"; 
+        
         const textoMsg = encodeURIComponent(
             `*NOVA ENCOMENDA RD LOGISTICS*\n` +
             `Área Calculada: ${area}m²\n\n` +
-            `- Placas: ${qtdPlacas} un (Preço com margem)\n` +
+            `- Placas: ${qtdPlacas} un\n` +
             `- Perfis: ${qtdPerfis}m\n` +
-            `- Parafusos TN25: ${qtdParafusos} un\n` +
-            `- Massa de Juntas: ${qtdMassa}kg\n` +
+            `- Parafusos: ${qtdParafusos} un\n` +
+            `- Massa: ${qtdMassa}kg\n` +
             `- Manta Lã de Rocha: ${qtdManta}m²\n\n` +
-            `*VALOR TOTAL ORÇAMENTADO: ${totalGeral}€*`
+            `*VALOR TOTAL ESTIMADO: ${totalGeral}€*`
         );
         document.getElementById('whatsappBtn').onclick = function() {
             window.open(`https://wa.me/${numeroWhatsApp}?text=${textoMsg}`, '_blank');
         };
 
         const chat = document.getElementById('chatLogs');
-        chat.innerHTML += `<p style='color:#fff;'><strong>[USER]:</strong> Solicitado cálculo para ${area}m².</p>`;
-        chat.innerHTML += `<p style='color:var(--nexus-blue);'><strong>[NEXUS AI]:</strong> Orçamento estruturado com sucesso. Todos os 5 materiais reconciliados. Margem comercial travada no sistema.</p>`;
+        chat.innerHTML += `<p style='color:#fff;'><strong>[USER]:</strong> Solicitado orçamento para ${area}m².</p>`;
+        chat.innerHTML += `<p style='color:var(--nexus-blue);'><strong>[NEXUS AI]:</strong> Engenharia processada com 5 materiais. Pronto para envio.</p>`;
         chat.scrollTop = chat.scrollHeight;
 
         document.getElementById('resultadoBloco').style.display = 'block';
     }
 </script>
+
 </body>
 </html>
